@@ -1,6 +1,8 @@
 package Files;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +17,7 @@ import org.testng.annotations.Test;
 public class Java_Script_Executor {
 	
 	WebDriver driver;
-	WebDriverWait wait;
+	
 
 	@BeforeTest
 	public void bt() throws InterruptedException {
@@ -24,29 +26,32 @@ public class Java_Script_Executor {
 		driver.get("https://snapdeal.com/");
 		driver.manage().window().maximize();
 		
-		// Initialize WebDriverWait
-		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		
 	}
 	
 	@Test
 	public void main() throws InterruptedException {
-		// Use WebDriverWait to wait until the search box is visible
-		WebElement searchBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("keyword")));
-		
+		// Use implicit to wait until the search box is visible
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		 driver.findElement(By.xpath("(//input[@name='keyword' and @type='text'])[1]")).sendKeys("shoes");
+	
 		// Use JavaScriptExecutor to enter text into the search box
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].value='books'", searchBox);
+		 JavascriptExecutor js = (JavascriptExecutor) driver;
+			WebElement j=	 driver.findElement(By.cssSelector("[class='searchformButton col-xs-4 rippleGrey']"));
+				 driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		
-		// Wait until the search button is clickable
-		WebElement searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='searchformButton col-xs-4 rippleGrey']")));
-		
+	
 		// Use JavaScriptExecutor to click the search button
-		js.executeScript("arguments[0].click()", searchButton);
+		js.executeScript("arguments[0].click()", j);
+		
+		
+
 	}
 	
 	@AfterTest
 	public void at() {
 		// Close the WebDriver
+		driver.quit();
 		
 	
 	}
